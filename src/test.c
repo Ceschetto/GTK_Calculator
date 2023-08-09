@@ -25,41 +25,35 @@ void activate(GtkApplication *appPtr, gpointer data)
   grid = gtk_grid_new();
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
-  
-  button = gtk_button_new_with_label("1");
-  g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), 1 );
-  gtk_grid_attach(GTK_GRID( grid ), button, 0, 0, 1, 1);
 
+  for(int i = 9, j= 0; i >= 0; i--)
+  {
+    if(i != 9 && (i%3 == 0)) j++;
+    char stri[] = {i+48}; //ascii table trick
+    button = gtk_button_new_with_label(stri);
+    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), i ); //da capire sta storia del gpointer data come parametro
+    gtk_grid_attach(GTK_GRID( grid ), button, i%3, j, 1, 1);
+    
+  }
 
-
-  button = gtk_button_new_with_label("2");
-  g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), 2 );
-  gtk_grid_attach(GTK_GRID( grid ), button, 1, 0 , 1, 1 );
-
-
-
-  button = gtk_button_new_with_label("3");
-  g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), 3);
-  gtk_grid_attach(GTK_GRID( grid ), button, 2, 0 , 1, 1 );
-
-
-
-  button = gtk_button_new_with_label("+");
-  g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operation), '+');
-  gtk_grid_attach(GTK_GRID( grid ), button, 3, 0 , 1, 1 );
-
-
-  button = gtk_button_new_with_label("=");
-  g_signal_connect(button, "clicked", G_CALLBACK(print_results), NULL);
-  gtk_grid_attach(GTK_GRID( grid ), button, 0, 1 , 1, 1 );
-
-
+  for(int i = 0; i<4; i++)
+  {
+    char stri[] = { (i<2)? i+42 : 2*i + 41 }; //ascii table trick
+    button = gtk_button_new_with_label(stri);
+    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operation), i ); //char e int sono compatibili
+    gtk_grid_attach(GTK_GRID( grid ), button, 3, i, 1, 1);
+     
+  }
+ 
 
   gtk_widget_set_visible(window, true);
 
 
 
 }
+
+
+
 
 int main(int argc, char **argv)
 {
