@@ -1,5 +1,5 @@
 #include "../headers/calculator_data.h"
-#include "string.h"
+
 
 
 struct Calculator_Data 

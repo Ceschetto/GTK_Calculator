@@ -1,7 +1,6 @@
-#include <gtk/gtk.h>
+#include "../headers/gtk_interface.h"
 #include "../headers/calculator_data.h"
-#include <string.h>
-
+#include <gtk/gtk.h>
 void print_results(void)
 {
   g_print("%0.2lf\n", get_result());
@@ -26,9 +25,9 @@ void activate(GtkApplication *appPtr, gpointer data)
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
 
-  for(int i = 9, j= 0; i >= 0; i--)
+  for(int i = 9, j= -1; i >= 0; i--)
   {
-    if(i != 9 && (i%3 == 0)) j++;
+    if ( i%3 == 0) j++;
     char stri[] = {i+48, '\0'}; //ascii table trick
     button = gtk_button_new_with_label(stri);
     g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), i ); //da capire sta storia del gpointer data come parametro
@@ -56,22 +55,3 @@ void activate(GtkApplication *appPtr, gpointer data)
 
 }
 
-
-
-
-int main(int argc, char **argv)
-{
-
-  GtkApplication * TestApp;
-
-  TestApp = gtk_application_new("id.TestApp.test", G_APPLICATION_DEFAULT_FLAGS);
-
-  g_signal_connect(TestApp, "activate", G_CALLBACK(activate), NULL);
-
-  int status = g_application_run(G_APPLICATION(TestApp), argc, argv);
-
-  g_object_unref(TestApp);
-  
-  return status;
-
-} 
