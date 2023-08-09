@@ -52,23 +52,25 @@ void init_calculator(void)
 
 void set_operation(char operat)
 {
+
+    fflush(stdout);
     switch (operat)
     {
     case '+':
-        dataPtr->operation = sum;
+        (dataPtr->operation) = sum;
         break;
 
 
     case '-':
-        dataPtr->operation = diff;
+        (dataPtr->operation) = diff;
         break;
 
     case '*':
-        dataPtr->operation = mul;
+        (dataPtr->operation) = mul;
         break;
 
     case '/':
-        dataPtr->operation = divv;
+        (dataPtr->operation) = divv;
         break;
 
     default:
@@ -92,6 +94,8 @@ void set_operand(int op)
             flagOp2 = 's';
         }
     }
+    
+
 }
 
 void remove_operand(void)
@@ -113,6 +117,10 @@ void remove_operand(void)
 
 double get_result(void)
 {
+    flagOp1 = 'n';
+    flagOp2 = 'n';
+
+    fflush(stdout);
     return ((dataPtr->operation) == NULL)?  dataPtr->res : (dataPtr->res = (dataPtr->operation)());
 }
 
