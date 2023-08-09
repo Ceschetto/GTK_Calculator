@@ -19,7 +19,7 @@ void activate(GtkApplication *appPtr, gpointer data)
   init_calculator();
 
   window = gtk_application_window_new(appPtr);
-  gtk_window_set_title(GTK_WINDOW(window), "Titolone");
+  gtk_window_set_title(GTK_WINDOW(window), "Calcolatrice");
   gtk_window_set_default_size(GTK_WINDOW(window), 200, 200);
 
   grid = gtk_grid_new();
