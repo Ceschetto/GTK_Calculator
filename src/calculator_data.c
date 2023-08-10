@@ -1,6 +1,9 @@
 #include "../headers/calculator_data.h"
+ 
 
-
+#define FLAG_OP1 0b1
+#define FLAG_OP2 0b10
+#define FLAG_OPERATION 0b100
 
 struct Calculator_Data 
 {
@@ -16,8 +19,7 @@ typedef CalcData *CalcDataPtr;
 
 CalcDataPtr dataPtr = NULL;
 
-char flagOp1 = 'n';
-char flagOp2 = 'n';
+unsigned char flags = '\0';
 
 
 
@@ -53,7 +55,6 @@ void init_calculator(void)
 void set_operation(char operat)
 {
 
-    fflush(stdout);
     switch (operat)
     {
     case '+':
@@ -74,53 +75,39 @@ void set_operation(char operat)
         break;
 
     default:
+        return;
         break;
     }
+    flags |= FLAG_OPERATION;
+
 }
 
 void set_operand(int op)
 {
 
-    if(flagOp1 == 'n')
+    if((flags & FLAG_OP1) == 0)
     { 
         dataPtr->op1 = op;
-        flagOp1 = 's';
+        flags |= FLAG_OP1;
     }
     else
     {
-        if(flagOp2 == 'n')
+        if((flags & FLAG_OP2) == 0)
         { 
             dataPtr->op2 = op;
-            flagOp2 = 's';
+            flags |= FLAG_OP2;
         }
     }
     
 
 }
 
-void remove_operand(void)
-{
-    if(flagOp2 != 'n') 
-    {
-        dataPtr->op2 = 0;
-        flagOp2 = 'n';
-    }
-    else
-    {
-        if(flagOp1 != 'n')
-        { 
-            dataPtr->op1 = 0;
-            flagOp1 = 'n';
-        }
-    }
-}
 
 double get_result(void)
 {
-    flagOp1 = 'n';
-    flagOp2 = 'n';
 
-    fflush(stdout);
-    return ((dataPtr->operation) == NULL)?  dataPtr->res : (dataPtr->res = (dataPtr->operation)());
+    ((flags & FLAG_OPERATION) == 0)?  dataPtr->res = 0 : (dataPtr->res = (dataPtr->operation)());
+    flags = '\0';  
+    return dataPtr->res;  
 }
 
