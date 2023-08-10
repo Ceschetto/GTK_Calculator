@@ -25,21 +25,27 @@ void activate(GtkApplication *appPtr, gpointer data)
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
 
-  for(int i = 9, j= -1; i >= 0; i--)
+  int number[10];//se per qualche motivo quest memoria fosse allcoata dinamicamente quando dovrei liberarla?
+  for(int i = 0, j = -1; i != 9; i++)
   {
     if ( i%3 == 0) j++;
-    char stri[] = {i+48, '\0'}; //ascii table trick
+
+    number[i] = 9 - i;
+    char stri[] = {number[i] + 48, '\0'}; //ascii table trick
     button = gtk_button_new_with_label(stri);
-    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), i ); //da capire sta storia del gpointer data come parametro
+    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), (number + i)  ); //gpointer = void* --> quelli di gtk sono stupidi
     gtk_grid_attach(GTK_GRID( grid ), button, i%3, j, 1, 1);
     
   }
 
+
+  char operands[4]; //free? ;-;
   for(int i = 0; i<4; i++)
   {
-    char operatorStr[] = { (i<2)? i+42 : 2*i + 41, '\0'  }; //ascii parkour
-    button = gtk_button_new_with_label(operatorStr);
-    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operation), operatorStr[0] ); //char e int sono compatibili
+    operands[i] =  (i<2)? i+42 : 2*i + 41 ; //ascii parkour
+    char *operator = (char *) calloc(1, sizeof(char));
+    button = gtk_button_new_with_label(operands + i);
+    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operation), (operands + i) ); 
     gtk_grid_attach(GTK_GRID( grid ), button, 3, i, 1, 1);
   }
 

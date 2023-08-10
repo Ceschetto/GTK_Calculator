@@ -52,9 +52,9 @@ void init_calculator(void)
     memset(dataPtr, 0, sizeof(CalcData));
 }
 
-void set_operation(char operat)
+void set_operation(void *operatStr)
 {
-
+    char operat = *((char *)operatStr);
     switch (operat)
     {
     case '+':
@@ -82,8 +82,10 @@ void set_operation(char operat)
 
 }
 
-void set_operand(int op)
+
+void set_operand(void *opPtr)
 {
+    int op = *((int *)opPtr);
 
     if((flags & FLAG_OP1) == 0)
     { 

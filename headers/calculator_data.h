@@ -5,9 +5,9 @@
 
 void init_calculator(void);
 
-void set_operation(char operat);
+void set_operation(void *operat);
 
-void set_operand(int op);
+void set_operand(void *opPtr);
 
 void remove_operand(void);
 
