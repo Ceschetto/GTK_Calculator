@@ -1,12 +1,14 @@
 #include "../headers/calculator_data.h"
- 
+#include <stdbool.h>
 
 #define FLAG_OP1 0b1
 #define FLAG_OP2 0b10
-#define FLAG_OPERATION 0b100
+#define FLAG_DECIMAL 0b100
+#define FLAG_OPERATION 0b1000
 
 struct Calculator_Data 
 {
+    double n_decimals;
     double op1;
     double op2;
     double (* operation)(void);
@@ -17,9 +19,40 @@ typedef struct Calculator_Data CalcData;
 typedef CalcData *CalcDataPtr;
 
 
+
 CalcDataPtr dataPtr = NULL;
 
 unsigned char flags = '\0';
+
+bool is_operator_selected()
+{
+    return ((flags & FLAG_OPERATION) == 0)? false : true;
+}
+
+void set_operator_flag_active(void)
+{
+    flags |= FLAG_OPERATION;
+}
+
+bool is_decimal()
+{
+    return ((flags & FLAG_DECIMAL) == 0)? false : true;
+}
+
+void flip_decimal_flag()
+{
+    flags |= FLAG_DECIMAL;
+}
+
+void reset_calculator_preserve_res(void)
+{
+    double res = dataPtr->res;
+    flags = '\0';
+    memset(dataPtr, 0, sizeof(CalcData));
+    dataPtr->res = res;
+}
+
+
 
 
 
@@ -44,17 +77,21 @@ double divv(void)
 }
 
 
-
-
 void init_calculator(void)
 {
     dataPtr = (CalcDataPtr) malloc(sizeof(CalcData));
     memset(dataPtr, 0, sizeof(CalcData));
+
 }
+
+
 
 void set_operation(void *operatStr)
 {
+
     char operat = *((char *)operatStr);
+    printf("%c\n", operat);
+    fflush(stdout);
     switch (operat)
     {
     case '+':
@@ -78,6 +115,7 @@ void set_operation(void *operatStr)
         return;
         break;
     }
+
     flags |= FLAG_OPERATION;
 
 }
@@ -85,21 +123,45 @@ void set_operation(void *operatStr)
 
 void set_operand(void *opPtr)
 {
-    int op = *((int *)opPtr);
 
-    if((flags & FLAG_OP1) == 0)
-    { 
-        dataPtr->op1 = op;
+    double op = (double)(*(int *)opPtr);
+
+
+    if(!is_operator_selected())
+    {
+
+
         flags |= FLAG_OP1;
+        if(!is_decimal())
+        {
+            dataPtr->op1 = (dataPtr->op1 * 10) + op ;
+        }
+        else
+        {
+            dataPtr->op1 += op * dataPtr->n_decimals;
+            dataPtr->n_decimals *= 0.1; 
+        }
+        printf("%lf\n", dataPtr->op1);
+
     }
     else
     {
-        if((flags & FLAG_OP2) == 0)
-        { 
-            dataPtr->op2 = op;
-            flags |= FLAG_OP2;
+        if(!is_decimal())
+        {
+            flags |= FLAG_OP2;            
+            dataPtr->op2 = (dataPtr->op2 * 10) + op;
+
         }
+        else
+        {
+            dataPtr->op1 += op * dataPtr->n_decimals;
+            dataPtr->n_decimals *= 0.1; 
+        }
+        printf("%lf\n", dataPtr->op2);
+
     }
+    fflush(stdout);
+
     
 
 }
@@ -109,7 +171,18 @@ double get_result(void)
 {
 
     ((flags & FLAG_OPERATION) == 0)?  dataPtr->res = 0 : (dataPtr->res = (dataPtr->operation)());
-    flags = '\0';  
+    reset_calculator_preserve_res();  
     return dataPtr->res;  
+}
+
+
+double get_operand1(void)
+{
+    return dataPtr->op1;
+}
+
+double get_operand2(void)
+{
+    return dataPtr->op2;
 }
 

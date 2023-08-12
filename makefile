@@ -2,7 +2,9 @@
 objects = obj/calculator_data.o obj/gtk_interface.o
 
 
-output : $(objects)
+
+output : clean $(objects)
+
 	gcc src/main.c `pkg-config --cflags gtk4` -o bin/main $(objects) `pkg-config --cflags --libs gtk4` 
 
 
@@ -14,14 +16,15 @@ obj/calculator_data.o: headers/calculator_data.h src/calculator_data.c
 
 
 
-
-
-
 clean: 
 	rm -f bin/*
 	rm -f obj/*
 
 
+
+
+
 run:
+	clear
 	./bin/main
 

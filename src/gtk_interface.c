@@ -3,7 +3,7 @@
 #include <gtk/gtk.h>
 void print_results(void)
 {
-  g_print("%0.2lf\n", get_result());
+  g_print("= %0.2lf\n", get_result());
 }
 
 
@@ -25,21 +25,21 @@ void activate(GtkApplication *appPtr, gpointer data)
   gtk_window_set_child(GTK_WINDOW(window), grid);
 
 
-  int number[10];//se per qualche motivo quest memoria fosse allcoata dinamicamente quando dovrei liberarla?
-  for(int i = 0, j = -1; i != 9; i++)
+  int* numbers = (int*)calloc( 10, sizeof(int));// quando dovrei liberarla?
+  for(int i = 0, j = -1; i <= 9; i++)
   {
     if ( i%3 == 0) j++;
 
-    number[i] = 9 - i;
-    char stri[] = {number[i] + 48, '\0'}; //ascii table trick
+    numbers[i] = 9 - i;
+    char stri[] = {numbers[i] + 48, '\0'}; //ascii table trick
     button = gtk_button_new_with_label(stri);
-    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), (number + i)  ); //gpointer = void* --> quelli di gtk sono stupidi
+    g_signal_connect_swapped(button, "clicked", G_CALLBACK(set_operand), (numbers + i)  ); //gpointer = void* --> quelli di gtk sono stupidi
     gtk_grid_attach(GTK_GRID( grid ), button, i%3, j, 1, 1);
     
   }
 
 
-  char operands[4]; //free? ;-;
+  char* operands = (char*)calloc(4, sizeof(char));//free??
   for(int i = 0; i<4; i++)
   {
     operands[i] =  (i<2)? i+42 : 2*i + 41 ; //ascii parkour
