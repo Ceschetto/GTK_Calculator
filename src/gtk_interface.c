@@ -53,6 +53,11 @@ void activate(GtkApplication *appPtr, gpointer data)
   g_signal_connect(button, "clicked", G_CALLBACK(print_results), NULL);
   gtk_grid_attach( GTK_GRID( grid ), button, 2, 3, 1, 1 );
 
+  button = gtk_button_new_with_label(".");
+  g_signal_connect(button, "clicked", G_CALLBACK(set_true_decimal_flag), NULL);
+  gtk_grid_attach(GTK_GRID( grid ), button, 2, 4, 1, 1);
+
+
  
 
   gtk_widget_set_visible(window, true);
