@@ -12,6 +12,10 @@ void activate(GtkApplication *appPtr, gpointer data)
 {
   GtkWidget *window;
   GtkWidget *button;
+  GtkWidget *box;
+
+  GtkTextBuffer * text_buffer;
+  GtkWidget * text_view;
 
   GtkWidget *grid;
 
@@ -21,8 +25,21 @@ void activate(GtkApplication *appPtr, gpointer data)
   gtk_window_set_title(GTK_WINDOW(window), "Calcolatrice");
   gtk_window_set_default_size(GTK_WINDOW(window), 200, 200);
 
+
   grid = gtk_grid_new();
-  gtk_window_set_child(GTK_WINDOW(window), grid);
+
+
+  text_view = gtk_text_view_new();
+  text_buffer = gtk_text_view_get_buffer(GTK_TEXT_VIEW(text_view));
+  gtk_text_buffer_set_text(text_buffer, "Wow", -1);
+
+
+  box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 1);
+  gtk_box_set_baseline_child(GTK_BOX(box), 2);
+  gtk_box_append(GTK_BOX(box), text_view);
+  gtk_box_append(GTK_BOX(box), grid);
+
+  gtk_window_set_child(GTK_WINDOW(window), box);
 
 
   int* numbers = (int*)calloc( 10, sizeof(int));// quando dovrei liberarla?
@@ -49,9 +66,11 @@ void activate(GtkApplication *appPtr, gpointer data)
     gtk_grid_attach(GTK_GRID( grid ), button, 3, i, 1, 1);
   }
 
+
   button = gtk_button_new_with_label("=");
   g_signal_connect(button, "clicked", G_CALLBACK(print_results), NULL);
   gtk_grid_attach( GTK_GRID( grid ), button, 2, 3, 1, 1 );
+
 
   button = gtk_button_new_with_label(".");
   g_signal_connect(button, "clicked", G_CALLBACK(set_true_decimal_flag), NULL);
