@@ -1,11 +1,7 @@
 #include "../headers/gtk_interface.h"
 #include "../headers/calculator_data.h"
 #include <gtk/gtk.h>
-void print_results(void)
-{
-  g_print("= %0.2lf\n", get_result());
-}
-
+void print_results( GtkTextBuffer * text_buffer);
 
 
 void activate(GtkApplication *appPtr, gpointer data)
@@ -68,7 +64,7 @@ void activate(GtkApplication *appPtr, gpointer data)
 
 
   button = gtk_button_new_with_label("=");
-  g_signal_connect(button, "clicked", G_CALLBACK(print_results), NULL);
+  g_signal_connect_swapped(button, "clicked", G_CALLBACK(print_results), text_buffer);
   gtk_grid_attach( GTK_GRID( grid ), button, 2, 3, 1, 1 );
 
 
@@ -83,5 +79,15 @@ void activate(GtkApplication *appPtr, gpointer data)
 
 
 
+}
+
+
+
+
+void print_results( GtkTextBuffer * text_buffer)
+{
+  char res[100];
+  sprintf(res, "%0.2lf", get_result());
+  gtk_text_buffer_set_text(text_buffer, res, -1);
 }
 
