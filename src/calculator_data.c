@@ -1,5 +1,5 @@
 #include "../headers/calculator_data.h"
-#include <stdbool.h>
+
 
 #define FLAG_OP1 0b1
 #define FLAG_OP2 0b10
@@ -30,7 +30,6 @@ double sum(void);
 double diff(void);
 double mul(void);
 double divv(void);
-bool is_operator_selected(void);
 void set_operator_flag_active(void);
 bool is_decimal(void);
 void reset_calculator_preserve_res(void);
@@ -50,12 +49,8 @@ void init_calculator(void)
 
 
 
-void set_operation(void *operatStr)
+void set_operation(char operat)
 {
-
-    char operat = *((char *)operatStr);
-    printf("%c\n", operat);
-    fflush(stdout);
 
     switch (operat)
     {
@@ -86,10 +81,9 @@ void set_operation(void *operatStr)
 
 }
 
-void set_operand(void *opPtr)
+void set_operand(double op)
 {
 
-    double op = (double)(*(int *)opPtr);
 
 
     if(!is_operator_selected())
@@ -106,28 +100,27 @@ void set_operand(void *opPtr)
             dataPtr->op1 += (op * dataPtr->n_decimals);
             dataPtr->n_decimals *= 0.1; 
         }
-        printf("%lf\n", dataPtr->op1);
+
 
     }
     else
     {
         if(!is_decimal())
         {
-            puts("test2");
             flags |= FLAG_OP2;            
             dataPtr->op2 = (dataPtr->op2 * 10) + op;
 
         }
         else
         {
-            puts("test");
+
             dataPtr->op2 += (op * dataPtr->n_decimals);
             dataPtr->n_decimals *= 0.1; 
         }
-        printf("%lf\n", dataPtr->op2);
 
     }
-    fflush(stdout);
+
+
 
     
 
